@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f8c8cf">
+  <meta name="description" content="A little place made for you — a romantic anniversary beach moment.">
+  <title>A Little Place Made for You ♡</title>
+  <link rel="preload" as="image" href="assets/images/beach-scene.webp">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="scene" id="scene" aria-label="A romantic beach anniversary scene">
+    <img class="scene-art" src="assets/images/beach-scene.webp" alt="" aria-hidden="true">
+
+
+    <!-- Existing artwork is kept as the visual base; these are separate transparent overlays. -->
+    <div class="butterfly butterfly-1" aria-hidden="true"><img src="assets/images/butterfly.webp" alt=""></div>
+    <div class="butterfly butterfly-2" aria-hidden="true"><img src="assets/images/butterfly.webp" alt=""></div>
+    <div class="butterfly butterfly-3" aria-hidden="true"><img src="assets/images/butterfly.webp" alt=""></div>
+    <div class="butterfly butterfly-4" aria-hidden="true"><img src="assets/images/butterfly.webp" alt=""></div>
+
+    <div class="cat" id="cat" aria-hidden="true">
+      <img src="assets/images/cat.gif" alt="">
+    </div>
+
+    <!-- Envelope: move this with --envelope-x / --envelope-y / --envelope-size. -->
+    <button class="envelope-hitbox" id="envelope" aria-label="Open your anniversary letter">
+      <span class="envelope" aria-hidden="true">
+        <span class="envelope-paper"></span>
+        <span class="envelope-flap"></span>
+        <span class="envelope-body"></span>
+        <span class="ribbon ribbon-v"></span>
+        <span class="ribbon ribbon-h"></span>
+        <span class="seal">♥</span>
+      </span>
+    </button>
+
+    <div class="intro" id="intro" aria-hidden="false">
+      <p>A little place made for you</p>
+      <span>For you, love ♡</span>
+    </div>
+
+    <button class="music-control" id="musicControl" type="button" aria-label="Play music" aria-pressed="false">
+      <span class="music-icon">♫</span>
+      <span class="music-state">Music</span>
+    </button>
+
+    <audio id="music" src="assets/images/anniversary.mp3" loop preload="auto"></audio>
+
+    <section class="letter-overlay" id="letterOverlay" aria-hidden="true">
+      <div class="letter-backdrop"></div>
+      <article class="letter" role="dialog" aria-modal="true" aria-labelledby="letterTitle">
+        <button class="close-letter" id="closeLetter" type="button" aria-label="Close letter">×</button>
+        <div class="paper-decor decor-one">✿</div>
+        <div class="paper-decor decor-two">♡</div>
+        <div class="letter-scroll">
+          <p class="letter-kicker">To the one I love</p>
+          <h1 id="letterTitle">Dear Love,</h1>
+
+          <div class="letter-message" contenteditable="true" spellcheck="true">
+            <p>[WRITE MY ANNIVERSARY LETTER HERE] </p>
+            <p>Always yours,<br>[MY NAME]</p>
+          </div>
+
+          <div class="paper-flower">✿</div>
+        </div>
+      </article>
+
+      <div class="petals" aria-hidden="true">
+        <i>✿</i><i>·</i><i>♡</i><i>·</i><i>✿</i>
+      </div>
+    </section>
+
+    <!-- Anniversary celebration -->
+<!-- Anniversary celebration -->
+<section
+  class="anniversary-celebration"
+  id="anniversaryCelebration"
+  aria-hidden="true"
+>
+  <div class="celebration-petals" aria-hidden="true">
+    <i>🌸</i>
+    <i>🌸</i>
+    <i>✿</i>
+    <i>🌸</i>
+    <i>✿</i>
+    <i>🌸</i>
+    <i>✿</i>
+    <i>🌸</i>
+  </div>
+
+  <div class="celebration-sparkles" aria-hidden="true">
+    <i>✦</i>
+    <i>✧</i>
+    <i>♡</i>
+    <i>✦</i>
+    <i>✧</i>
+  </div>
+
+  <div class="celebration-message">
+    <p>Happy Anniversary</p>
+    <span>Love ♡</span>
+  </div>
+</section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

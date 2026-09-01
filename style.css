@@ -1,0 +1,1115 @@
+/* =========================================================
+   RESPONSIVE ANNIVERSARY BEACH
+   All easy-to-edit scene values live in :root.
+   Change these first when aligning the overlays to your art.
+   ========================================================= */
+
+:root {
+   /* Envelope position inside the picnic basket */
+  --envelope-x: 82%;
+  --envelope-y: 75%;
+  --envelope-size: clamp(45px, 5vw, 85px);
+
+  --cat-x: 20%;
+  --cat-y: 61%;
+  --cat-size: clamp(65px, 8vw, 125px);
+
+  --butterfly-size: clamp(24px, 3.2vw, 54px);
+
+  --pink: #e99aa9;
+  --pink-deep: #c96f82;
+  --cream: #fff7ed;
+  --paper: #fff9ef;
+  --ink: #5f4650;
+
+  --wave-opacity: .20;
+  --wave-speed-a: 11s;
+  --wave-speed-b: 15s;
+  --wave-speed-c: 19s;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  background: #efb6c0;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font: inherit;
+}
+
+.scene {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  touch-action: manipulation;
+}
+
+.scene-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* On tall phones, keep the artwork from becoming too aggressively cropped. */
+@media (orientation: portrait) and (max-aspect-ratio: 3/4) {
+  .scene-art {
+    object-position: center 58%;
+  }
+}
+
+
+/* =========================================================
+   CAT ANIMATION
+   The cat actually moves instead of just bobbing.
+   ========================================================= */
+
+.cat {
+  position: absolute;
+  z-index: 7;
+
+  left: var(--cat-x);
+  top: var(--cat-y);
+
+  width: var(--cat-size);
+
+  pointer-events: none;
+
+  transform-origin: center bottom;
+
+  /*
+   * JavaScript controls the movement.
+   * CSS only handles the little body bounce.
+   */
+  will-change: transform, left, top;
+}
+
+.cat img {
+  display: block;
+  width: 100%;
+  height: auto;
+
+  user-select: none;
+  -webkit-user-drag: none;
+
+  transform-origin: center bottom;
+
+  animation: cat-body 1.1s ease-in-out infinite;
+}
+
+/* Small body bounce while playing */
+
+@keyframes cat-body {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg) scaleY(1);
+  }
+
+  25% {
+    transform: translateY(-4px) rotate(1.5deg) scaleY(.98);
+  }
+
+  50% {
+    transform: translateY(-7px) rotate(-1deg) scaleY(1.01);
+  }
+
+  75% {
+    transform: translateY(-3px) rotate(1deg) scaleY(.98);
+  }
+}
+
+/* ---------------- Butterflies ---------------- */
+
+/* =========================================================
+   BUTTERFLIES
+   These are independent animated butterflies.
+   They are NOT the butterflies baked into the background.
+   ========================================================= */
+
+.butterfly {
+  position: absolute;
+  z-index: 8;
+  width: var(--butterfly-size);
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+  transform-origin: center center;
+}
+
+.butterfly img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+
+  /* Gentle wing/body movement */
+  animation: butterfly-wing 0.65s ease-in-out infinite alternate;
+}
+
+@keyframes butterfly-wing {
+  from {
+    transform: scaleY(.92) rotate(-3deg);
+  }
+
+  to {
+    transform: scaleY(1.04) rotate(3deg);
+  }
+}
+
+/* ---------------------------------------------------------
+   Initial positions
+
+   1 + 2 = butterflies around the girl
+   3 + 4 = butterflies travelling around the scene
+   --------------------------------------------------------- */
+
+.butterfly-1,
+.butterfly-2,
+.butterfly-3,
+.butterfly-4 {
+  left: 0;
+  top: 0;
+}
+
+/* ---------------- Intro ---------------- */
+
+.intro {
+  position: absolute;
+  z-index: 20;
+  top: clamp(24px, 7vh, 72px);
+  left: 50%;
+  width: min(90vw, 560px);
+  transform: translateX(-50%);
+  text-align: center;
+  color: #fffaf8;
+  text-shadow: 0 2px 18px rgba(85,38,50,.22);
+  transition: opacity .9s ease, transform .9s ease;
+  pointer-events: none;
+}
+
+.intro p {
+  margin: 0;
+  font-size: clamp(20px, 3vw, 34px);
+  letter-spacing: .03em;
+}
+
+.intro span {
+  display: block;
+  margin-top: 7px;
+  font-size: clamp(13px, 1.7vw, 18px);
+  opacity: .9;
+}
+
+.intro.is-hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-12px);
+}
+
+/* ---------------- Music ---------------- */
+
+.music-control {
+  position: absolute;
+  z-index: 30;
+  top: max(14px, env(safe-area-inset-top));
+  right: max(14px, env(safe-area-inset-right));
+  min-width: 42px;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 999px;
+  background: rgba(255,255,255,.18);
+  color: white;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.music-control:hover,
+.music-control:focus-visible {
+  background: rgba(255,255,255,.30);
+  transform: scale(1.04);
+  outline: none;
+}
+
+.music-icon { font-size: 19px; line-height: 1; }
+.music-state { font: 12px/1 system-ui, sans-serif; }
+
+@media (max-width: 480px) {
+  .music-control {
+    width: 42px;
+    padding: 0;
+  }
+  .music-state { display: none; }
+}
+
+/* ---------------- Envelope ---------------- */
+
+.envelope-hitbox {
+  position: absolute;
+  z-index: 10;
+  left: var(--envelope-x);
+  top: var(--envelope-y);
+  width: calc(var(--envelope-size) * 1.25);
+  height: calc(var(--envelope-size) * 1.25);
+  transform: translate(-50%, -50%);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  perspective: 700px;
+  touch-action: manipulation;
+}
+
+.envelope {
+  position: relative;
+  display: block;
+  width: var(--envelope-size);
+  aspect-ratio: 1.42 / 1;
+  margin: auto;
+  transform-origin: center bottom;
+  transform: translateY(6px) perspective(300px) rotateX(40deg);
+  filter: drop-shadow(0 8px 7px rgba(83,35,48,.24));
+  transition: transform .25s ease;
+}
+
+.envelope-hitbox:hover .envelope,
+.envelope-hitbox:focus-visible .envelope {
+  transform: rotate(-3deg) translateY(-4px) scale(1.04);
+}
+
+.envelope-hitbox:focus-visible {
+  outline: 2px solid rgba(255,255,255,.85);
+  outline-offset: 5px;
+  border-radius: 12px;
+}
+
+.envelope-body,
+.envelope-paper,
+.envelope-flap {
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+}
+
+.envelope-body {
+  z-index: 3;
+  background: linear-gradient(145deg, #fff4e9, #f5c8ce);
+  border: 1px solid rgba(153,77,91,.28);
+  overflow: hidden;
+}
+
+.envelope-body::before,
+.envelope-body::after {
+  content: "";
+  position: absolute;
+  width: 72%;
+  height: 1px;
+  background: rgba(171,87,103,.25);
+  top: 50%;
+}
+.envelope-body::before { left: -13%; transform: rotate(34deg); }
+.envelope-body::after { right: -13%; transform: rotate(-34deg); }
+
+.envelope-paper {
+  z-index: 1;
+  inset: 7% 8% 10%;
+  background: var(--paper);
+  border-radius: 3px;
+  transform: translateY(12%);
+  transition: transform 1s cubic-bezier(.2,.8,.2,1);
+}
+
+.envelope-flap {
+  z-index: 5;
+  background: linear-gradient(160deg, #ffe9df, #f0b5c0);
+  clip-path: polygon(0 0, 100% 0, 50% 72%);
+  transform-origin: 50% 0%;
+  transition: transform .8s cubic-bezier(.2,.8,.2,1);
+  backface-visibility: hidden;
+}
+
+.ribbon {
+  position: absolute;
+  z-index: 7;
+  background: rgba(216,119,137,.7);
+  pointer-events: none;
+}
+.ribbon-v {
+  top: 0; bottom: 0; left: 50%;
+  width: 10%;
+  transform: translateX(-50%);
+}
+.ribbon-h {
+  left: 0; right: 0; top: 53%;
+  height: 9%;
+  transform: translateY(-50%);
+}
+
+.seal {
+  position: absolute;
+  z-index: 9;
+  left: 50%;
+  top: 53%;
+  width: 27%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #efb1bc, #c9677d);
+  color: #fff8f5;
+  font-size: clamp(10px, 1.4vw, 19px);
+  box-shadow: 0 2px 5px rgba(99,44,56,.25);
+  transition: opacity .35s ease, transform .45s ease;
+}
+
+.envelope.is-opening .seal {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1.35);
+}
+
+.envelope.is-opening .envelope-flap {
+  transform: rotateX(180deg);
+}
+
+.envelope.is-opening .envelope-paper {
+  transform: translateY(-35%);
+}
+
+/* ---------------- Letter overlay ---------------- */
+
+.letter-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding:
+    max(18px, env(safe-area-inset-top))
+    max(18px, env(safe-area-inset-right))
+    max(18px, env(safe-area-inset-bottom))
+    max(18px, env(safe-area-inset-left));
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.letter-overlay.is-open {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.letter-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(52,24,37,.35);
+  backdrop-filter: blur(0);
+  -webkit-backdrop-filter: blur(0);
+  opacity: 0;
+  transition: opacity .8s ease, backdrop-filter .8s ease, -webkit-backdrop-filter .8s ease;
+}
+
+.letter-overlay.is-open .letter-backdrop {
+  opacity: 1;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.letter {
+  position: relative;
+  z-index: 2;
+  width: min(720px, 92vw);
+  height: min(78vh, 760px);
+  max-height: calc(100svh - 32px);
+  border-radius: clamp(10px, 2vw, 18px);
+    background-image:
+  radial-gradient(
+    ellipse at 20% 20%,
+    rgba(255,255,255,.35),
+    transparent 45%
+  ),
+  radial-gradient(
+    ellipse at 80% 75%,
+    rgba(220,160,170,.08),
+    transparent 50%
+  ),
+  repeating-linear-gradient(
+    0deg,
+    rgba(120,90,90,.018) 0px,
+    rgba(120,90,90,.018) 1px,
+    transparent 1px,
+    transparent 4px
+  ),
+  repeating-linear-gradient(
+    90deg,
+    rgba(255,255,255,.12) 0px,
+    rgba(255,255,255,.12) 1px,
+    transparent 1px,
+    transparent 6px
+  ),
+  linear-gradient(
+    135deg,
+    #fff8f2,
+    #fdf0ed
+  );
+  box-shadow: 0 25px 80px rgba(44,18,29,.34);
+  overflow: hidden;
+  transform: translateY(28px) scale(.78) rotate(-2deg);
+  opacity: 0;
+  transition: transform .9s cubic-bezier(.16,1,.3,1), opacity .6s ease;
+}
+
+.letter-overlay.is-open .letter {
+  transform: translateY(0) scale(1) rotate(0);
+  opacity: 1;
+}
+
+.letter::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(180, 105, 120, .20);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.letter-scroll {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: clamp(34px, 6vw, 70px) clamp(24px, 7vw, 76px);
+  scrollbar-width: thin;
+}
+
+.letter-kicker {
+  margin: 0 0 12px;
+  text-align: center;
+  color: var(--pink-deep);
+  font: 600 clamp(11px, 1.5vw, 14px)/1.4 system-ui, sans-serif;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.letter h1 {
+  margin: 0 0 28px;
+  text-align: center;
+  color: #734e5a;
+  font: 400 clamp(28px, 5vw, 52px)/1.1 Georgia, serif;
+}
+
+.letter-message {
+  position: relative;
+  z-index: 3;
+  outline: none;
+  color: #634b53;
+  font-size: clamp(17px, 2.2vw, 23px);
+  line-height: 1.85;
+  white-space: normal;
+}
+
+.letter-message p {
+  margin: 0 0 1.25em;
+}
+
+.close-letter {
+  position: absolute;
+  z-index: 8;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(235,176,187,.18);
+  color: #8d5967;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.close-letter:hover,
+.close-letter:focus-visible {
+  background: rgba(235,176,187,.35);
+  outline: none;
+}
+
+.paper-decor,
+.paper-flower {
+  color: rgba(201,111,130,.55);
+  pointer-events: none;
+}
+
+.paper-decor {
+  position: absolute;
+  z-index: 4;
+  font-size: clamp(18px, 3vw, 28px);
+}
+
+.decor-one { top: 9%; left: 6%; }
+.decor-two { bottom: 8%; right: 6%; }
+
+.paper-flower {
+  text-align: center;
+  font-size: 24px;
+  margin-top: 28px;
+}
+
+.petals {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.petals i {
+  position: absolute;
+  opacity: 0;
+  color: rgba(255,219,225,.9);
+  font-style: normal;
+  animation: petal-float 6s ease-in-out infinite;
+}
+
+.letter-overlay.is-open .petals i { opacity: 1; }
+.petals i:nth-child(1) { left: 12%; top: 35%; animation-delay: .2s; }
+.petals i:nth-child(2) { left: 22%; top: 75%; animation-delay: 1.2s; }
+.petals i:nth-child(3) { right: 17%; top: 28%; animation-delay: 2s; }
+.petals i:nth-child(4) { right: 26%; top: 70%; animation-delay: .8s; }
+.petals i:nth-child(5) { right: 8%; top: 48%; animation-delay: 2.7s; }
+
+@keyframes petal-float {
+  0% { transform: translateY(22px) rotate(0); }
+  50% { transform: translateY(-18px) rotate(12deg); }
+  100% { transform: translateY(22px) rotate(0); }
+}
+
+/* ---------------- Responsive scene tuning ---------------- */
+
+/* Tablets */
+@media (max-width: 900px) {
+  :root {
+    --envelope-x: 80%;
+    --envelope-y: 68%;
+
+    --cat-x: 48%;
+    --cat-y: 72%;
+  }
+}
+
+/* Phones: percentages are deliberately separated from desktop so the
+   basket/cat can be aligned to a portrait crop without changing HTML. */
+@media (max-width: 600px) {
+  :root {
+    /*
+     * Portrait-phone positions.
+     * These compensate for the taller crop of the beach image.
+     */
+
+    --envelope-x: 80%;
+    --envelope-y: 67%;
+    --envelope-size: clamp(48px, 15vw, 76px);
+
+    --cat-x: 47%;
+    --cat-y: 72%;
+    --cat-size: clamp(62px, 23vw, 115px);
+
+    --butterfly-size: clamp(21px, 8vw, 38px);
+  }
+
+  .water-motion {
+    top: 55%;
+    height: 30%;
+  }
+
+  .letter {
+    width: min(94vw, 600px);
+    height: min(82svh, 720px);
+  }
+
+  .letter-scroll {
+    padding: 42px 25px 36px;
+  }
+
+  .letter::after {
+    inset: 9px;
+  }
+}
+
+/* Very narrow phones */
+@media (max-width: 380px) {
+  :root {
+    --envelope-x: 64%;
+    --envelope-y: 61%;
+    --cat-x: 46%;
+    --cat-y: 73%;
+  }
+
+  .letter-scroll {
+    padding-left: 21px;
+    padding-right: 21px;
+  }
+}
+
+/* Landscape phones */
+@media (orientation: landscape) and (max-height: 520px) {
+  .intro {
+    top: 15px;
+  }
+
+  .intro p {
+    font-size: 19px;
+  }
+
+  .letter {
+    height: calc(100svh - 22px);
+    width: min(80vw, 760px);
+  }
+
+  .letter-scroll {
+    padding-top: 25px;
+    padding-bottom: 25px;
+  }
+}
+
+/* Respect users who request reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================================================
+   ANNIVERSARY CELEBRATION
+   One soft celebration sequence
+   ========================================================= */
+
+.anniversary-celebration {
+  position: absolute;
+  inset: 0;
+
+  z-index: 90;
+
+  overflow: hidden;
+  pointer-events: none;
+
+  opacity: 0;
+  visibility: hidden;
+}
+
+.anniversary-celebration.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+/* =========================================================
+   FINAL MESSAGE
+   ========================================================= */
+
+.celebration-message {
+  position: absolute;
+
+  z-index: 3;
+
+  left: 50%;
+  top: 42%;
+
+  width: 90%;
+
+  text-align: center;
+
+  opacity: 0;
+
+  transform:
+    translate(-50%, 25px)
+    scale(.96);
+}
+
+.anniversary-celebration.is-active .celebration-message {
+  animation: anniversaryMessage 1.5s ease-out .7s forwards;
+}
+
+.celebration-message p {
+  margin: 0;
+
+  color: #fff8f5;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: clamp(34px, 6vw, 64px);
+
+  font-weight: 400;
+
+  letter-spacing: .02em;
+
+  text-shadow:
+    0 3px 18px rgba(70, 30, 45, .35),
+    0 0 30px rgba(255, 230, 235, .5);
+}
+
+.celebration-message span {
+  display: block;
+
+  margin-top: 8px;
+
+  color: #fff8f5;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: clamp(18px, 2.5vw, 26px);
+
+  font-style: italic;
+
+  letter-spacing: .08em;
+}
+
+@keyframes anniversaryMessage {
+  from {
+    opacity: 0;
+
+    transform:
+      translate(-50%, 25px)
+      scale(.96);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translate(-50%, 0)
+      scale(1);
+  }
+}
+
+
+/* =========================================================
+   FLOWERS / PETALS
+   ========================================================= */
+
+.celebration-petals {
+  position: absolute;
+  inset: 0;
+
+  z-index: 2;
+
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+.celebration-petals i {
+  position: absolute;
+
+  top: -50px;
+
+  display: block;
+
+  font-size: 25px;
+  font-style: normal;
+
+  opacity: 0;
+
+  will-change: transform, opacity;
+}
+
+
+/* Individual starting positions */
+
+.celebration-petals i:nth-child(1) {
+  left: 8%;
+}
+
+.celebration-petals i:nth-child(2) {
+  left: 20%;
+}
+
+.celebration-petals i:nth-child(3) {
+  left: 34%;
+}
+
+.celebration-petals i:nth-child(4) {
+  left: 48%;
+}
+
+.celebration-petals i:nth-child(5) {
+  left: 61%;
+}
+
+.celebration-petals i:nth-child(6) {
+  left: 74%;
+}
+
+.celebration-petals i:nth-child(7) {
+  left: 86%;
+}
+
+.celebration-petals i:nth-child(8) {
+  left: 94%;
+}
+
+
+/* Start all petals only after celebration begins */
+
+.anniversary-celebration.is-active
+.celebration-petals i:nth-child(1) {
+  animation: petalFall 5.5s ease-in-out .1s forwards;
+}
+
+.anniversary-celebration.is-active
+.celebration-petals i:nth-child(2) {
+  animation: petalFall 6s ease-in-out .4s forwards;
+}
+
+.anniversary-celebration.is-active
+.celebration-petals i:nth-child(3) {
+  animation: petalFall 5.2s ease-in-out .8s forwards;
+}
+
+.anniversary-celebration.is-active
+.celebration-petals i:nth-child(4) {
+  animation: petalFall 6.3s ease-in-out .2s forwards;
+}
+
+.anniversary-celebration.is-active
+.celebration-petals i:nth-child(5) {
+  animation: petalFall 5.8s ease-in-out .6s forwards;
+}
+
+.anniversary-celebration.is-active
+.celebration-petals i:nth-child(6) {
+  animation: petalFall 6.5s ease-in-out 1s forwards;
+}
+
+.anniversary-celebration.is-active
+.celebration-petals i:nth-child(7) {
+  animation: petalFall 5.6s ease-in-out .3s forwards;
+}
+
+.anniversary-celebration.is-active
+.celebration-petals i:nth-child(8) {
+  animation: petalFall 6.2s ease-in-out .9s forwards;
+}
+
+
+@keyframes petalFall {
+
+  0% {
+    opacity: 0;
+
+    transform:
+      translate3d(0, -30px, 0)
+      rotate(0deg);
+  }
+
+  10% {
+    opacity: .95;
+  }
+
+  35% {
+    transform:
+      translate3d(45px, 28vh, 0)
+      rotate(100deg);
+  }
+
+  60% {
+    transform:
+      translate3d(-35px, 55vh, 0)
+      rotate(210deg);
+  }
+
+  82% {
+    opacity: .8;
+
+    transform:
+      translate3d(35px, 80vh, 0)
+      rotate(300deg);
+  }
+
+  100% {
+    opacity: 0;
+
+    transform:
+      translate3d(-15px, 110vh, 0)
+      rotate(390deg);
+  }
+}
+
+
+/* =========================================================
+   SPARKLES + HEARTS
+   ========================================================= */
+
+.celebration-sparkles {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+
+  pointer-events: none;
+}
+
+.celebration-sparkles i {
+  position: absolute;
+
+  display: block;
+
+  color: #fff;
+  font-family: Georgia, serif;
+  font-size: 30px;
+  font-style: normal;
+  line-height: 1;
+
+  opacity: 0;
+
+  text-shadow:
+    0 0 8px rgba(255, 255, 255, .9),
+    0 0 18px rgba(255, 220, 230, .8);
+
+  will-change: transform, opacity;
+}
+
+
+/* Positions */
+
+.celebration-sparkles i:nth-child(1) {
+  left: 28%;
+  top: 35%;
+}
+
+.celebration-sparkles i:nth-child(2) {
+  right: 28%;
+  top: 37%;
+}
+
+.celebration-sparkles i:nth-child(3) {
+  left: 24%;
+  top: 52%;
+}
+
+.celebration-sparkles i:nth-child(4) {
+  right: 23%;
+  top: 53%;
+}
+
+.celebration-sparkles i:nth-child(5) {
+  left: 50%;
+  top: 29%;
+}
+
+
+/* Start only after celebration */
+
+.anniversary-celebration.is-active
+.celebration-sparkles i:nth-child(1) {
+  animation: celebrationSparkle 2.8s ease-out 1.1s forwards;
+}
+
+.anniversary-celebration.is-active
+.celebration-sparkles i:nth-child(2) {
+  animation: celebrationSparkle 2.8s ease-out 1.5s forwards;
+}
+
+.anniversary-celebration.is-active
+.celebration-sparkles i:nth-child(3) {
+  animation: celebrationSparkle 2.8s ease-out 1.8s forwards;
+}
+
+.anniversary-celebration.is-active
+.celebration-sparkles i:nth-child(4) {
+  animation: celebrationSparkle 2.8s ease-out 2.1s forwards;
+}
+
+.anniversary-celebration.is-active
+.celebration-sparkles i:nth-child(5) {
+  animation: celebrationSparkle 2.8s ease-out 2.4s forwards;
+}
+
+
+@keyframes celebrationSparkle {
+
+  0% {
+    opacity: 0;
+    transform: scale(.3) rotate(-20deg);
+  }
+
+  25% {
+    opacity: 1;
+    transform: scale(1.25) rotate(10deg);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  75% {
+    opacity: .7;
+    transform: scale(1.1) rotate(10deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(.6) rotate(20deg);
+  }
+}
+
+/* =========================================================
+   Anniversary celebration must remain visible
+   even when reduced-motion is enabled.
+   ========================================================= */
+
+.anniversary-celebration.is-active
+.celebration-petals i {
+  animation-duration: 5.5s !important;
+  animation-iteration-count: 1 !important;
+}
+
+.anniversary-celebration.is-active
+.celebration-sparkles i {
+  animation-duration: 2.8s !important;
+  animation-iteration-count: 1 !important;
+}
+
+.anniversary-celebration.is-active
+.celebration-message {
+  animation-duration: 1.5s !important;
+  animation-iteration-count: 1 !important;
+}
