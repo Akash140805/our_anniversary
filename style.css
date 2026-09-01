@@ -1113,3 +1113,35 @@ button {
   animation-duration: 1.5s !important;
   animation-iteration-count: 1 !important;
 }
+
+/* Moving sailboat */
+.sailboat {
+  position: absolute;
+  z-index: 3;
+  top: 36%;
+  left: 45%;
+  width: 57px;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  will-change: transform;
+  animation: sailboat-drift 25s linear infinite;
+}
+
+@keyframes sailboat-drift {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-25vw) translateY(-2px);
+  }
+
+  100% {
+    transform: translateX(-50vw) translateY(0);
+  }
+}
+.sailboat {
+  animation: sailboat-drift 55s linear infinite !important;
+}
