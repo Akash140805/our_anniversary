@@ -76,7 +76,7 @@ button {
 /* On tall phones, keep the artwork from becoming too aggressively cropped. */
 @media (orientation: portrait) and (max-aspect-ratio: 3/4) {
   .scene-art {
-    object-position: center 58%;
+    object-position: center 78%;
   }
 }
 
